@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Input Outlets Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .form-group { margin-bottom: 15px; }
+    label { font-weight: bold; display: block; margin-bottom: 5px; }
+    input, select { width: 100%; padding: 8px; }
+    button { padding: 10px 15px; background: #4285f4; color: white; border: none; cursor: pointer; }
+    button:hover { background: #3367d6; }
+  </style>
+</head>
+<body>
+  <h2>Input Outlets Tracker</h2>
+  <form id="trackerForm">
+    
+    <div class="form-group">
+      <label>WD Code *</label>
+      <select id="wdCode" required>
+        <option value="SA3666">SA3666</option>
+        <option value="SA3724">SA3724</option>
+        <option value="SA3786">SA3786</option>
+        <option value="SA3637">SA3637</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>GT TL Name *</label>
+      <input type="text" id="gtTlName" required>
+    </div>
+
+    <div class="form-group">
+      <label>Market Name *</label>
+      <input type="text" id="marketName" required>
+    </div>
+
+    <div class="form-group">
+      <label>Dhanush Id *</label>
+      <input type="text" id="dhanushId" required>
+    </div>
+
+    <div class="form-group">
+      <label>Outlet Name *</label>
+      <input type="text" id="outletName" required>
+    </div>
+
+    <div class="form-group">
+      <label>Contact Number *</label>
+      <input type="tel" id="contactNumber" required>
+    </div>
+
+    <div class="form-group">
+      <label>RA Type *</label>
+      <select id="raType" required>
+        <option value="RA1">RA1</option>
+        <option value="RA2">RA2</option>
+        <option value="RA3">RA3</option>
+        <option value="RA4">RA4</option>
+        <option value="RA5">RA5</option>
+        <option value="RA6">RA6</option>
+        <option value="RAK">RAK</option>
+        <option value="RAX">RAX</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>PP Outlet *</label>
+      <select id="ppOutlet" required>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Asset Available *</label>
+      <select id="assetAvailable" required>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Amount *</label>
+      <input type="number" id="amount" required>
+    </div>
+
+    <div class="form-group">
+      <label>Dual Visibility *</label>
+      <select id="dualVisibility" required>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Outlet Image *</label>
+      <input type="text" id="outletImage" placeholder="Paste file link here" required>
+    </div>
+
+    <div class="form-group">
+      <label>Rent Card Image *</label>
+      <input type="text" id="rentCardImage" placeholder="Paste file link here" required>
+    </div>
+
+    <div class="form-group">
+      <label>Your Name *</label>
+      <input type="text" id="yourName" required>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    document.getElementById("trackerForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+
+          var payload = new URLSearchParams();
+          payload.append("wdCode", document.getElementById("wdCode").value);
+          payload.append("gtTlName", document.getElementById("gtTlName").value);
+          payload.append("marketName", document.getElementById("marketName").value);
+          payload.append("dhanushId", document.getElementById("dhanushId").value);
+          payload.append("outletName", document.getElementById("outletName").value);
+          payload.append("contactNumber", document.getElementById("contactNumber").value);
+          payload.append("raType", document.getElementById("raType").value);
+          payload.append("ppOutlet", document.getElementById("ppOutlet").value);
+          payload.append("assetAvailable", document.getElementById("assetAvailable").value);
+          payload.append("amount", document.getElementById("amount").value);
+          payload.append("dualVisibility", document.getElementById("dualVisibility").value);
+          payload.append("outletImage", document.getElementById("outletImage").value);
+          payload.append("rentCardImage", document.getElementById("rentCardImage").value);
+          payload.append("yourName", document.getElementById("yourName").value);
+          payload.append("latitude", latitude);
+          payload.append("longitude", longitude);
+
+          // ✅ Replace with your deployed Apps Script Web App URL
+          fetch("https://script.google.com/macros/s/AKfycbxzk5LNtFOJzWGU3QnEbffqqh0rTFiqbvDZ3kDVVZc2Qk_xY4_Gk86AUbTVylyS1A05ng/exec", {
+            method: "POST",
+            body: payload
+          })
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById("status").innerText = "Submitted successfully ✅";
+            document.getElementById("trackerForm").reset();
+          })
+          .catch(err => {
+            document.getElementById("status").innerText = "Error submitting ❌ " + err;
+          });
+        });
+      } else {
+        document.getElementById("status").innerText = "Geolocation not supported on this device.";
+      }
+    });
+  </script>
+</body>
+</html>
